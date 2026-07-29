@@ -123,7 +123,7 @@
               <div style="background:rgba(192,86,42,.12);border:1px solid rgba(192,86,42,.35);border-radius:10px;padding:11px 14px;margin-bottom:16px;font-size:13.5px;color:var(--clay);">{{ loginError }}</div>
             </sc-if>
             <label style="display:block;font-family:Oswald;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;">{{ t.login_email }}</label>
-            <input id="tkz-login-email" type="email" placeholder="filipnote4@gmail.com" style="width:100%;padding:12px 14px;border:1.5px solid rgba(18,58,36,.3);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;margin-bottom:14px;" />
+            <input id="tkz-login-email" type="email" placeholder="{{ emailPlaceholder }}" style="width:100%;padding:12px 14px;border:1.5px solid rgba(18,58,36,.3);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;margin-bottom:14px;" />
             <label style="display:block;font-family:Oswald;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;">{{ t.login_name }}</label>
             <input id="tkz-login-name" type="text" placeholder="{{ namePlaceholder }}" style="width:100%;padding:12px 14px;border:1.5px solid rgba(18,58,36,.3);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;margin-bottom:20px;" />
             <button onClick="{{ submitLogin }}" style="width:100%;font-family:Oswald;font-size:15px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;background:var(--green);color:#fff;border:none;border-radius:10px;padding:14px;cursor:pointer;">{{ t.login_submit }}</button>
@@ -253,6 +253,7 @@ class Component extends DCLogic {
       pendingTitle: lang === "sr" ? "Zahtev poslat" : "Request sent",
       pendingCta: lang === "sr" ? "Razgledaj sajt" : "Browse the site",
       namePlaceholder: lang === "sr" ? "Ime i prezime" : "Name and Surname",
+      emailPlaceholder: lang === "sr" ? "Unesi svoju mejl adresu" : "Enter your email address",
       introKicker: lang === "sr" ? "Teniski klub Zabrežje" : "Tennis Club Zabrežje",
       introTitle: lang === "sr" ? "Dobrodošli na teren." : "Welcome to the courts.",
       introSub: lang === "sr" ? "Prijavi se ako igraš ligu, ili uđi kao gost da razgledaš tabelu, profile i termine."

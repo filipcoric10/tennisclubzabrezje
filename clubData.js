@@ -94,8 +94,8 @@
               court: 1 + Math.floor(rnd() * 2), status: isPast ? "played" : "scheduled", score: null, winner: null };
             if (isPast) {
               var aWins = rnd() < a.strength / (a.strength + b.strength);
-              var g1w = 6, g1l = rnd() < 0.5 ? 3 : 4, g2w = 6, g2l = rnd() < 0.5 ? 2 : 4;
-              m.score = aWins ? (g1w + "-" + g1l + ", " + g2w + "-" + g2l) : (g1l + "-" + g1w + ", " + g2l + "-" + g2w);
+              var loserG = Math.floor(rnd() * 8); // 0..7 games for the loser; winner reaches 9
+              m.score = aWins ? ("9-" + loserG) : (loserG + "-9");
               m.winner = aWins ? a.id : b.id;
             }
             matches.push(m);
@@ -109,12 +109,10 @@
   var MATCHES = buildMatches();
 
   function parseSets(score) {
-    // "6-3, 6-4" -> {a: setsWonByLeft, b: setsWonByRight}
+    // matches are played to 9 games; parse the single "X-Y" game score.
     var a = 0, b = 0;
-    (score || "").split(",").forEach(function (s) {
-      var m = s.trim().match(/(\d+)\s*[-:]\s*(\d+)/);
-      if (m) { if (+m[1] > +m[2]) a++; else if (+m[2] > +m[1]) b++; }
-    });
+    var m = (score || "").match(/(\d+)\s*[-:]\s*(\d+)/);
+    if (m) { a = +m[1]; b = +m[2]; }
     return { a: a, b: b };
   }
 

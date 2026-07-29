@@ -44,7 +44,7 @@
         <a href="Leagues.dc.html" style="display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.85);font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:13px;margin-bottom:22px;"><i class="ph-duotone ph-arrow-left"></i>{{ t.back }}</a>
         <div class="tkz-phead" style="display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center;">
           <div class="tkz-portrait" style="width:150px;height:190px;border-radius:16px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.3);border:3px solid rgba(255,255,255,.3);">
-            <image-slot id="{{ portraitSlot }}" shape="rect" placeholder="Portrait photo"></image-slot>
+            <image-slot id="{{ portraitSlot }}" shape="rect" src="{{ portraitSrc }}" placeholder="Portrait photo"></image-slot>
           </div>
           <div>
             <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);padding:6px 13px;border-radius:999px;margin-bottom:14px;">
@@ -86,9 +86,9 @@
             <div style="height:8px;border-radius:4px;background:rgba(18,58,36,.1);margin-top:14px;overflow:hidden;"><div style="height:100%;width:{{ winRate }}%;background:var(--green);"></div></div>
           </div>
           <div style="background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:22px;">
-            <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Sets</div>
+            <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">{{ gamesLabel }}</div>
             <div style="font-family:Oswald;font-weight:700;font-size:40px;color:var(--clay);line-height:1;"><count-up to="{{ setsW }}">{{ setsW }}</count-up><span style="color:var(--muted);font-size:24px;">/{{ setsTotal }}</span></div>
-            <div style="font-size:13px;color:var(--muted);margin-top:14px;">{{ setsW }} won · {{ setsL }} lost</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:14px;">{{ gamesDetail }}</div>
           </div>
           <div style="background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:22px;">
             <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Streak</div>
@@ -215,7 +215,7 @@ class Component extends DCLogic {
 
     var statBars = [
       { label: T.win_rate, value: winRate + "%", pct: winRate, color: "#1f6b3a" },
-      { label: (lang === "sr" ? "Setovi osvojeni" : "Sets won"), value: agg.setsW + "/" + (setsTotal || 0), pct: setsTotal ? Math.round(agg.setsW / setsTotal * 100) : 0, color: "#c0562a" },
+      { label: (lang === "sr" ? "Gemovi osvojeni" : "Games won"), value: agg.setsW + "/" + (setsTotal || 0), pct: setsTotal ? Math.round(agg.setsW / setsTotal * 100) : 0, color: "#c0562a" },
       { label: (lang === "sr" ? "Mečevi odigrani" : "Matches played"), value: String(agg.played), pct: Math.min(100, agg.played / 27 * 100), color: "#8a6a2f" },
       { label: T.season_total + " · " + T.points, value: String(agg.points), pct: Math.min(100, agg.points / 81 * 100), color: "#5b7a2e" }
     ];
@@ -230,9 +230,12 @@ class Component extends DCLogic {
       name: p.name, league: p.league, leagueName: lang === "sr" ? meta.name_sr : meta.name_en,
       leagueColor: meta.color, leagueColorDk: "#123a24",
       portraitSlot: "profile-" + p.id,
+      portraitSrc: "images/players/p" + ((parseInt((p.id.split("-")[1] || "0"), 10) < 10 ? "0" : "") + parseInt((p.id.split("-")[1] || "0"), 10)) + ".jpg",
       rank: headerRank, points: agg.points, record: agg.won + "–" + agg.lost, form: form,
       tabs: tabs, isOverview: this.state.tab === "overview", isResults: this.state.tab === "results", isStats: this.state.tab === "stats",
       winRate: winRate, setsW: agg.setsW, setsL: agg.setsL, setsTotal: setsTotal,
+      gamesLabel: lang === "sr" ? "Gemovi" : "Games",
+      gamesDetail: agg.setsW + (lang === "sr" ? " osvojenih · " : " won · ") + agg.setsL + (lang === "sr" ? " primljenih" : " lost"),
       streakLabel: agg.streak > 0 ? agg.streak + "W" : "—",
       streakNote: agg.streak > 0 ? (lang === "sr" ? "uzastopnih pobeda" : "wins in a row") : (lang === "sr" ? "nema aktivan niz" : "no active streak"),
       playsSince: p.plays_since, handLabel: p.hand === "right" ? T.right : T.left,

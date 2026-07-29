@@ -135,7 +135,7 @@
           <sc-if value="{{ m.isEditing }}" hint-placeholder-val="{{ false }}">
             <div style="margin-top:14px;padding-top:14px;border-top:1px dashed rgba(18,58,36,.2);">
               <div style="font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-family:Oswald;margin-bottom:8px;">{{ t.edit_result }}</div>
-              <input id="tkz-score" type="text" placeholder="6-3, 6-4" value="{{ editScore }}" style="width:100%;padding:10px 12px;border:1.5px solid rgba(18,58,36,.3);border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:10px;background:#fff;" />
+              <input id="tkz-score" type="text" placeholder="9-6" value="{{ editScore }}" style="width:100%;padding:10px 12px;border:1.5px solid rgba(18,58,36,.3);border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:10px;background:#fff;" />
               <div style="display:flex;gap:8px;margin-bottom:12px;">
                 <button onClick="{{ pickA }}" style="{{ winAStyle }}">{{ m.aName }}</button>
                 <button onClick="{{ pickB }}" style="{{ winBStyle }}">{{ m.bName }}</button>
@@ -158,7 +158,7 @@
       <sc-for list="{{ roster }}" as="p" hint-placeholder-count="20">
         <a href="{{ p.href }}" style="display:block;background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:16px;overflow:hidden;color:var(--ink);">
           <div style="position:relative;aspect-ratio:3/4;background:{{ p.tint }};">
-            <image-slot id="{{ p.slot }}" shape="rect" placeholder="{{ p.ph }}"></image-slot>
+            <image-slot id="{{ p.slot }}" shape="rect" src="{{ p.src }}" placeholder="{{ p.ph }}"></image-slot>
             <div style="position:absolute;top:10px;left:10px;width:30px;height:30px;border-radius:8px;background:{{ p.color }};color:#fff;display:grid;place-items:center;font-family:Oswald;font-weight:700;font-size:14px;pointer-events:none;">{{ p.rank }}</div>
           </div>
           <div style="padding:13px 15px;">
@@ -288,9 +288,12 @@ class Component extends DCLogic {
 
     var roster = standings.map(function (r) {
       var rank = byId[r.id] || 0;
+      var num = parseInt((r.id.split("-")[1] || "0"), 10);
+      var pad = (num < 10 ? "0" : "") + num;
       return { id: r.id, name: r.name, points: r.points,
         record: r.won + "–" + r.lost, rank: rank, color: meta.color,
         slot: "port-" + r.id, ph: r.name, href: "Player.dc.html?id=" + r.id,
+        src: "images/players/p" + pad + ".jpg",
         tint: "linear-gradient(160deg," + meta.color + "22," + meta.color + "0a)" };
     });
 
