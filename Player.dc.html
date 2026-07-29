@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+  <script src="./clubData.js"></script>
+  <script src="./count-up.js"></script>
+  <script src="./tkz-anim.js"></script>
+  <script src="./image-slot.js"></script>
+  <style>
+    :root{ --ink:#20291f; --green:#1f6b3a; --green-dk:#123a24; --ball:#cddb46; --clay:#c0562a; --brown:#6e4a30; --cream:#f6f2e9; --muted:#6f675a; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; background:var(--cream); color:var(--ink); font-family:"Source Sans 3",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+    a{ color:var(--green); text-decoration:none; } a:hover{ color:var(--clay); }
+    ::selection{ background:var(--ball); color:var(--ink); }
+    :focus-visible{ outline:2px solid var(--clay); outline-offset:2px; }
+    @media (max-width:880px){ .tkz-foot-grid{ grid-template-columns:1fr !important; } }
+    @media (max-width:720px){ .tkz-phead{ grid-template-columns:1fr !important; text-align:center; } .tkz-phead .tkz-portrait{ margin:0 auto; } .tkz-stat3{ grid-template-columns:1fr 1fr !important; } .tkz-info{ grid-template-columns:1fr 1fr !important; } }
+  </style>
+</helmet>
+<div>
+  <dc-import name="Nav" active="leagues" hint-size="100%,72px"></dc-import>
+
+  <sc-if value="{{ notFound }}" hint-placeholder-val="{{ false }}">
+    <section style="max-width:900px;margin:0 auto;padding:80px 24px;text-align:center;">
+      <p style="font-size:18px;color:var(--muted);">Player not found. <a href="Leagues.dc.html">{{ t.back }}</a></p>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ found }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <!-- HEADER -->
+    <section style="background:linear-gradient(150deg,{{ leagueColor }},{{ leagueColorDk }});color:#fff;">
+      <div style="max-width:1200px;margin:0 auto;padding:26px 24px 34px;">
+        <a href="Leagues.dc.html" style="display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.85);font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:13px;margin-bottom:22px;"><i class="ph-duotone ph-arrow-left"></i>{{ t.back }}</a>
+        <div class="tkz-phead" style="display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center;">
+          <div class="tkz-portrait" style="width:150px;height:190px;border-radius:16px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.3);border:3px solid rgba(255,255,255,.3);">
+            <image-slot id="{{ portraitSlot }}" shape="rect" placeholder="Portrait photo"></image-slot>
+          </div>
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);padding:6px 13px;border-radius:999px;margin-bottom:14px;">
+              <span style="font-family:Oswald;font-weight:700;">{{ league }}</span>
+              <span style="font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:12px;">{{ leagueName }}</span>
+            </div>
+            <h1 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:clamp(30px,5vw,56px);line-height:.98;margin:0 0 16px;">{{ name }}</h1>
+            <div style="display:flex;gap:30px;flex-wrap:wrap;">
+              <div><div style="font-family:Oswald;font-weight:700;font-size:34px;line-height:1;"><count-up to="{{ rank }}" prefix="#">#{{ rank }}</count-up></div><div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-top:4px;">{{ t.ranking }}</div></div>
+              <div><div style="font-family:Oswald;font-weight:700;font-size:34px;line-height:1;"><count-up to="{{ points }}">{{ points }}</count-up></div><div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-top:4px;">{{ t.points }}</div></div>
+              <div><div style="font-family:Oswald;font-weight:700;font-size:34px;line-height:1;">{{ record }}</div><div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-top:4px;">{{ t.won }} – {{ t.lost }}</div></div>
+              <div style="display:flex;flex-direction:column;gap:6px;"><div style="display:flex;gap:5px;">
+                <sc-for list="{{ form }}" as="f" hint-placeholder-count="5">
+                  <span style="width:24px;height:24px;border-radius:6px;display:grid;place-items:center;font-family:Oswald;font-size:12px;font-weight:600;background:{{ f.bg }};color:{{ f.fg }};">{{ f.r }}</span>
+                </sc-for>
+              </div><div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;">{{ t.current_form }}</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABS -->
+    <section style="max-width:1200px;margin:0 auto;padding:0 24px;">
+      <div style="display:flex;gap:6px;border-bottom:2px solid rgba(18,58,36,.14);">
+        <sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="3">
+          <button onClick="{{ tab.onClick }}" style="{{ tab.style }}">{{ tab.label }}</button>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- OVERVIEW -->
+    <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+      <section style="max-width:1200px;margin:0 auto;padding:30px 24px 20px;">
+        <div class="tkz-stat3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px;">
+          <div style="background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:22px;">
+            <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">{{ t.win_rate }}</div>
+            <div style="font-family:Oswald;font-weight:700;font-size:40px;color:var(--green);line-height:1;"><count-up to="{{ winRate }}" suffix="%">{{ winRate }}%</count-up></div>
+            <div style="height:8px;border-radius:4px;background:rgba(18,58,36,.1);margin-top:14px;overflow:hidden;"><div style="height:100%;width:{{ winRate }}%;background:var(--green);"></div></div>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:22px;">
+            <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Sets</div>
+            <div style="font-family:Oswald;font-weight:700;font-size:40px;color:var(--clay);line-height:1;"><count-up to="{{ setsW }}">{{ setsW }}</count-up><span style="color:var(--muted);font-size:24px;">/{{ setsTotal }}</span></div>
+            <div style="font-size:13px;color:var(--muted);margin-top:14px;">{{ setsW }} won · {{ setsL }} lost</div>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:22px;">
+            <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Streak</div>
+            <div style="font-family:Oswald;font-weight:700;font-size:40px;color:var(--green-dk);line-height:1;">{{ streakLabel }}</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:14px;">{{ streakNote }}</div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:24px;">
+          <div style="font-family:Oswald;letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:var(--clay);margin-bottom:18px;">{{ t.about_player }}</div>
+          <div class="tkz-info" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+            <div><div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">{{ t.plays }}</div><div style="font-size:19px;font-weight:600;margin-top:5px;">{{ playsSince }}</div></div>
+            <div><div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">{{ t.hand }}</div><div style="font-size:19px;font-weight:600;margin-top:5px;">{{ handLabel }}</div></div>
+            <div><div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">{{ t.height }}</div><div style="font-size:19px;font-weight:600;margin-top:5px;">{{ height }} cm</div></div>
+            <div><div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);">Age / {{ t.address }}</div><div style="font-size:19px;font-weight:600;margin-top:5px;">{{ age }} · {{ city }}</div></div>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- RESULTS -->
+    <sc-if value="{{ isResults }}" hint-placeholder-val="{{ false }}">
+      <section style="max-width:1200px;margin:0 auto;padding:30px 24px 20px;">
+        <div style="background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;overflow:hidden;">
+          <sc-for list="{{ playerMatches }}" as="m" hint-placeholder-count="8">
+            <div style="display:grid;grid-template-columns:64px 1fr auto auto;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(18,58,36,.07);">
+              <span style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-family:Oswald;font-weight:700;font-size:14px;color:#fff;background:{{ m.resultBg }};">{{ m.resultLetter }}</span>
+              <a href="{{ m.oppHref }}" style="color:var(--ink);min-width:0;"><span style="font-size:12px;color:var(--muted);display:block;">{{ t.vs }}</span><span style="font-weight:600;font-size:15.5px;">{{ m.oppName }}</span></a>
+              <span style="font-family:Oswald;font-weight:700;font-size:16px;color:var(--green-dk);">{{ m.score }}</span>
+              <span style="font-size:13px;color:var(--muted);text-align:right;white-space:nowrap;">{{ m.dateLabel }}<br>{{ t.court }} {{ m.court }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- STATISTICS -->
+    <sc-if value="{{ isStats }}" hint-placeholder-val="{{ false }}">
+      <section style="max-width:1200px;margin:0 auto;padding:30px 24px 20px;">
+        <div style="background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:26px;">
+          <sc-for list="{{ statBars }}" as="s" hint-placeholder-count="4">
+            <div style="margin-bottom:22px;">
+              <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px;"><span style="font-weight:600;">{{ s.label }}</span><span style="font-family:Oswald;font-weight:700;color:var(--green-dk);">{{ s.value }}</span></div>
+              <div style="height:12px;border-radius:6px;background:rgba(18,58,36,.09);overflow:hidden;"><div style="height:100%;width:{{ s.pct }}%;background:{{ s.color }};"></div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:26px;margin-top:16px;">
+          <div style="font-family:Oswald;letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:var(--clay);margin-bottom:16px;">{{ t.by_tournament }}</div>
+          <div style="display:grid;grid-template-columns:1fr 60px 60px 60px 70px;gap:0;font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:12px;color:var(--muted);padding-bottom:10px;border-bottom:1.5px solid rgba(18,58,36,.12);">
+            <div>{{ t.tournament }}</div><div style="text-align:center;">{{ t.played }}</div><div style="text-align:center;">{{ t.won }}</div><div style="text-align:center;">{{ t.rank }}</div><div style="text-align:right;">{{ t.points }}</div>
+          </div>
+          <sc-for list="{{ tourRows }}" as="tr" hint-placeholder-count="3">
+            <div style="display:grid;grid-template-columns:1fr 60px 60px 60px 70px;gap:0;align-items:center;padding:12px 0;border-bottom:1px solid rgba(18,58,36,.07);">
+              <div style="font-weight:600;font-size:15px;">{{ tr.name }}</div>
+              <div style="text-align:center;color:var(--muted);">{{ tr.played }}</div>
+              <div style="text-align:center;color:var(--green);font-weight:600;">{{ tr.won }}</div>
+              <div style="text-align:center;font-family:Oswald;font-weight:700;">{{ tr.rank }}</div>
+              <div style="text-align:right;font-family:Oswald;font-weight:700;font-size:17px;color:var(--green-dk);"><count-up to="{{ tr.points }}">{{ tr.points }}</count-up></div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <div style="height:60px;"></div>
+  <dc-import name="Footer" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang: "en", tab: "overview", pid: null, ready: false };
+  componentDidMount() {
+    try { this.setState({ pid: new URLSearchParams(location.search).get("id") }); } catch (e) {}
+    this._boot();
+    this._onLang = () => this.setState({ lang: window.ClubStore.getLang() });
+    document.addEventListener("tkz-lang", this._onLang);
+  }
+  componentWillUnmount() { document.removeEventListener("tkz-lang", this._onLang); }
+  _boot(t) { t = t || 0; if (!window.ClubStore) { if (t < 40) setTimeout(() => this._boot(t + 1), 50); return; }
+    this.setState({ ready: true, lang: window.ClubStore.getLang() }); }
+  _fmtDate(iso, lang) { try { return new Date(iso + "T00:00:00").toLocaleDateString(lang === "sr" ? "sr-Latn-RS" : "en-GB", { day: "numeric", month: "short", year: "numeric" }); } catch (e) { return iso; } }
+
+  renderVals() {
+    var self = this, D = window.ClubData, S = window.ClubStore, lang = this.state.lang;
+    var T = (D && D.I18N[lang]) || {};
+    if (!D || !this.state.pid) return { t: T, found: false, notFound: !!this.state.ready && !this.state.pid };
+    var p = D.PLAYERS_BY_ID[this.state.pid];
+    if (!p) return { t: T, found: false, notFound: true };
+
+    var meta = D.LEAGUE_META[p.league];
+    var season = S.playerSeason(p.id);
+    var agg = season.agg;
+    // header rank = rank in the latest tournament the player has actually played
+    var headerRank = "-";
+    for (var ti = season.perTournament.length - 1; ti >= 0; ti--) { if (season.perTournament[ti].rank) { headerRank = season.perTournament[ti].rank; break; } }
+    var winRate = agg.played ? Math.round((agg.won / agg.played) * 100) : 0;
+    var setsTotal = agg.setsW + agg.setsL;
+
+    function initials(n) { return n.split(" ").map(function (w) { return w[0]; }).slice(0, 2).join(""); }
+
+    var tabsDef = [["overview", T.overview], ["results", T.results_tab], ["stats", T.stats_tab]];
+    var tabs = tabsDef.map(function (d) {
+      var on = self.state.tab === d[0];
+      return { label: d[1], style: "font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:14px;padding:14px 18px;background:none;border:none;cursor:pointer;border-bottom:3px solid " +
+        (on ? meta.color : "transparent") + ";margin-bottom:-2px;color:" + (on ? "#20291f" : "#6f675a") + ";",
+        onClick: function () { self.setState({ tab: d[0] }); } };
+    });
+
+    var pMatches = S.matchesFor(p.league).filter(function (m) { return (m.a === p.id || m.b === p.id) && m.status === "played"; })
+      .sort(function (a, b) { return b.date < a.date ? -1 : 1; }).map(function (m) {
+        var oppId = m.a === p.id ? m.b : m.a;
+        var opp = D.PLAYERS_BY_ID[oppId];
+        var won = m.winner === p.id;
+        return { oppName: opp.name, oppHref: "Player.dc.html?id=" + oppId, score: m.score || "—",
+          dateLabel: self._fmtDate(m.date, lang) + " · " + D.tournamentName(m.tournament, lang), court: m.court,
+          resultLetter: won ? "W" : "L", resultBg: won ? "#1f6b3a" : "#c0562a" };
+      });
+
+    var form = agg.form.slice(-5).map(function (f) {
+      return { r: f, bg: f === "W" ? "rgba(255,255,255,.22)" : "rgba(0,0,0,.18)", fg: "#fff" };
+    });
+
+    var statBars = [
+      { label: T.win_rate, value: winRate + "%", pct: winRate, color: "#1f6b3a" },
+      { label: (lang === "sr" ? "Setovi osvojeni" : "Sets won"), value: agg.setsW + "/" + (setsTotal || 0), pct: setsTotal ? Math.round(agg.setsW / setsTotal * 100) : 0, color: "#c0562a" },
+      { label: (lang === "sr" ? "Mečevi odigrani" : "Matches played"), value: String(agg.played), pct: Math.min(100, agg.played / 27 * 100), color: "#8a6a2f" },
+      { label: T.season_total + " · " + T.points, value: String(agg.points), pct: Math.min(100, agg.points / 81 * 100), color: "#5b7a2e" }
+    ];
+
+    var tourRows = season.perTournament.map(function (r) {
+      return { name: D.tournamentName(r.id, lang), played: r.played, won: r.won, points: r.points,
+        rank: r.rank ? "#" + r.rank : "—" };
+    });
+
+    return {
+      t: T, found: true, notFound: false,
+      name: p.name, league: p.league, leagueName: lang === "sr" ? meta.name_sr : meta.name_en,
+      leagueColor: meta.color, leagueColorDk: "#123a24",
+      portraitSlot: "profile-" + p.id,
+      rank: headerRank, points: agg.points, record: agg.won + "–" + agg.lost, form: form,
+      tabs: tabs, isOverview: this.state.tab === "overview", isResults: this.state.tab === "results", isStats: this.state.tab === "stats",
+      winRate: winRate, setsW: agg.setsW, setsL: agg.setsL, setsTotal: setsTotal,
+      streakLabel: agg.streak > 0 ? agg.streak + "W" : "—",
+      streakNote: agg.streak > 0 ? (lang === "sr" ? "uzastopnih pobeda" : "wins in a row") : (lang === "sr" ? "nema aktivan niz" : "no active streak"),
+      playsSince: p.plays_since, handLabel: p.hand === "right" ? T.right : T.left,
+      height: p.height, age: p.age, city: p.city,
+      playerMatches: pMatches, statBars: statBars, tourRows: tourRows
+    };
+  }
+}
+</script>
+</body>
+</html>

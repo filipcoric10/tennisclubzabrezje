@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&amp;family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+  <script src="./clubData.js"></script>
+  <script src="./count-up.js"></script>
+  <script src="./tkz-anim.js"></script>
+  <script src="./image-slot.js"></script>
+  <style>
+    :root{ --ink:#20291f; --green:#1f6b3a; --green-dk:#123a24; --ball:#cddb46; --clay:#c0562a; --brown:#6e4a30; --cream:#f6f2e9; --muted:#6f675a; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; background:var(--cream); color:var(--ink); font-family:"Source Sans 3",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+    a{ color:var(--green); text-decoration:none; } a:hover{ color:var(--clay); }
+    ::selection{ background:var(--ball); color:var(--ink); }
+    @keyframes tkzFadeUp{ from{ opacity:0; transform:translateY(24px);} to{ opacity:1; transform:translateY(0);} }
+    :focus-visible{ outline:2px solid var(--clay); outline-offset:2px; }
+    .tkz-hero-h{ font-size:clamp(38px,6.4vw,86px); }
+    @media (max-width:880px){ .tkz-foot-grid{ grid-template-columns:1fr !important; } }
+    @media (max-width:760px){ .tkz-amen{ grid-template-columns:1fr 1fr !important; } .tkz-lg{ grid-template-columns:1fr 1fr !important; } .tkz-about2{ grid-template-columns:1fr !important; } }
+  </style>
+</helmet>
+<div>
+  <dc-import name="Nav" active="home" hint-size="100%,72px"></dc-import>
+
+  <!-- HERO -->
+  <section style="position:relative;height:min(88vh,760px);min-height:520px;width:100%;overflow:hidden;">
+    <div style="position:absolute;inset:0;">
+      <image-slot id="hero-bg" shape="rect" src="images/courts-sava.png" placeholder="Drop the wide photo of the two clay courts by the Sava — trees on one side, river on the other"></image-slot>
+    </div>
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,32,20,.82) 0%,rgba(12,32,20,.55) 42%,rgba(12,32,20,.15) 100%);pointer-events:none;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(12,32,20,.6) 0%,transparent 40%);pointer-events:none;"></div>
+    <div style="position:relative;height:100%;max-width:1200px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;justify-content:center;pointer-events:none;">
+      <div style="pointer-events:auto;max-width:720px;animation:tkzFadeUp .7s .05s both;">
+        <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(205,219,70,.16);border:1px solid rgba(205,219,70,.5);padding:7px 15px;border-radius:999px;margin-bottom:24px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--ball);"></span>
+          <span style="font-family:Oswald;letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--ball);">{{ t.season }} · {{ seasonVal }}</span>
+        </div>
+        <h1 class="tkz-hero-h" style="font-family:Oswald;font-weight:700;text-transform:uppercase;line-height:.98;color:#fff;margin:0 0 20px;text-shadow:0 2px 30px rgba(0,0,0,.4);">{{ heroTitle }}</h1>
+        <p style="color:#e3e9dc;font-size:clamp(16px,2vw,21px);line-height:1.5;max-width:560px;margin:0 0 32px;text-shadow:0 1px 12px rgba(0,0,0,.4);">{{ heroSub }}</p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <a href="Leagues.dc.html" style="font-family:Oswald;font-size:15px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;background:var(--ball);color:var(--green-dk);padding:15px 28px;border-radius:999px;display:inline-flex;align-items:center;gap:9px;"><i class="ph-duotone ph-ranking"></i>{{ t.hero_cta_leagues }}</a>
+          <a href="Reservations.dc.html" style="font-family:Oswald;font-size:15px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.55);padding:15px 28px;border-radius:999px;display:inline-flex;align-items:center;gap:9px;"><i class="ph-duotone ph-calendar-dots"></i>{{ t.hero_cta_reserve }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section style="max-width:1200px;margin:0 auto;padding:88px 24px 40px;">
+    <div class="tkz-about2" style="display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;">
+      <div>
+        <div style="font-family:Oswald;letter-spacing:.2em;text-transform:uppercase;font-size:13px;color:var(--clay);margin-bottom:16px;">{{ t.about_kicker }}</div>
+        <h2 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:clamp(28px,3.6vw,46px);line-height:1.14;margin:0 0 22px;">{{ t.about_title }}</h2>
+        <p style="font-size: 18px; line-height: 1.65; color: #463f34; max-width: 520px; margin: 0; position: relative">{{ t.about_body }}</p>
+        <div style="display:flex;gap:36px;margin-top:34px;flex-wrap:wrap;">
+          <div><div style="font-family:Oswald;font-weight:700;font-size:40px;color:var(--green);line-height:1;"><count-up to="2">2</count-up></div><div style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px;">Clay courts</div></div>
+          <div><div style="font-family:Oswald;font-weight:700;font-size:40px;color:var(--green);line-height:1;"><count-up to="4">4</count-up></div><div style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px;">Leagues</div></div>
+          <div><div style="font-family:Oswald;font-weight:700;font-size:40px;color:var(--green);line-height:1;"><count-up to="80">80</count-up></div><div style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px;">Players</div></div>
+        </div>
+      </div>
+      <div style="position:relative;aspect-ratio:4/5;border-radius:18px;overflow:hidden;box-shadow:0 24px 50px rgba(18,58,36,.22);">
+        <image-slot id="about-court" shape="rect" placeholder="Portrait photo of the courts / clubhouse"></image-slot>
+      </div>
+    </div>
+  </section>
+
+  <!-- AMENITIES -->
+  <section style="max-width:1200px;margin:0 auto;padding:56px 24px 40px;">
+    <h2 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:clamp(24px,3vw,36px);margin:0 0 30px;">{{ t.amen_title }}</h2>
+    <div class="tkz-amen" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <sc-for list="{{ amenities }}" as="a" hint-placeholder-count="9">
+        <div style="display:flex;align-items:center;gap:16px;background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:20px 22px;">
+          <span style="width:48px;height:48px;flex:0 0 auto;border-radius:12px;background:rgba(31,107,58,.1);display:grid;place-items:center;color:var(--green);font-size:26px;"><i class="{{ a.icon }}"></i></span>
+          <span style="font-size:16px;font-weight:600;">{{ a.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- LEAGUES PREVIEW -->
+  <section style="max-width:1200px;margin:0 auto;padding:56px 24px 40px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:26px;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:Oswald;letter-spacing:.2em;text-transform:uppercase;font-size:13px;color:var(--clay);margin-bottom:12px;">{{ t.standings_title }}</div>
+        <h2 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:clamp(24px,3vw,36px);margin:0;">{{ t.nav_leagues }}</h2>
+      </div>
+      <a href="Leagues.dc.html" style="font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:14px;display:inline-flex;align-items:center;gap:8px;">{{ t.hero_cta_leagues }} <i class="ph-duotone ph-arrow-right"></i></a>
+    </div>
+    <div class="tkz-lg" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+      <sc-for list="{{ leagues }}" as="lg" hint-placeholder-count="4">
+        <a href="{{ lg.href }}" style="display:block;background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:16px;padding:24px;color:var(--ink);overflow:hidden;position:relative;">
+          <div style="position:absolute;top:0;left:0;right:0;height:6px;background:{{ lg.color }};"></div>
+          <div style="display:flex;align-items:baseline;gap:12px;margin-top:6px;">
+            <span style="font-family:Oswald;font-weight:700;font-size:52px;line-height:.8;color:{{ lg.color }};">{{ lg.letter }}</span>
+            <span style="font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:14px;color:var(--muted);">{{ lg.name }}</span>
+          </div>
+          <div style="margin-top:20px;font-size:14px;color:var(--muted);">{{ lg.count }} {{ playersWord }}</div>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- RESERVE TEASER -->
+  <section style="max-width:1200px;margin:0 auto;padding:40px 24px 96px;">
+    <div style="position:relative;overflow:hidden;border-radius:20px;background:linear-gradient(120deg,#1f6b3a,#123a24);padding:56px;color:#fff;">
+      <div style="position:absolute;right:-30px;bottom:-30px;font-size:220px;color:rgba(205,219,70,.12);"><i class="ph-duotone ph-tennis-ball"></i></div>
+      <div style="position:relative;max-width:560px;">
+        <h2 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:clamp(26px,3.4vw,42px);margin:0 0 14px;">{{ t.reserve_title }}</h2>
+        <p style="color:#d5e0cf;font-size:17px;line-height:1.55;margin:0 0 26px;">{{ t.reserve_sub }}</p>
+        <a href="Reservations.dc.html" style="font-family:Oswald;font-size:15px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;background:var(--ball);color:var(--green-dk);padding:14px 28px;border-radius:999px;display:inline-flex;align-items:center;gap:9px;"><i class="ph-duotone ph-calendar-plus"></i>{{ t.hero_cta_reserve }}</a>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="Footer" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang: "en" };
+  componentDidMount() {
+    this._boot();
+    this._onLang = () => this.setState({ lang: window.ClubStore.getLang() });
+    document.addEventListener("tkz-lang", this._onLang);
+  }
+  componentWillUnmount() { document.removeEventListener("tkz-lang", this._onLang); }
+  _boot(t) { t = t || 0; if (!window.ClubStore) { if (t < 40) setTimeout(() => this._boot(t + 1), 50); return; } this.setState({ lang: window.ClubStore.getLang() }); }
+  renderVals() {
+    var D = window.ClubData, lang = this.state.lang;
+    var T = (D && D.I18N[lang]) || {};
+    var amenities = (D ? D.AMENITIES : []).map(function (a) {
+      return { icon: "ph-duotone ph-" + a.icon, label: lang === "sr" ? a.sr : a.en };
+    });
+    var leagues = (D ? D.LEAGUES : []).map(function (lg) {
+      var m = D.LEAGUE_META[lg];
+      return { letter: lg, name: lang === "sr" ? m.name_sr : m.name_en, color: m.color,
+        count: D.playersIn(lg).length, href: "Leagues.dc.html?lg=" + lg };
+    });
+    return {
+      t: T,
+      heroTitle: T.hero_title || "", heroSub: T.hero_sub || "", seasonVal: T.season_val || "",
+      amenities: amenities, leagues: leagues,
+      playersWord: lang === "sr" ? "igrača" : "players"
+    };
+  }
+}
+</script>
+</body>
+</html>

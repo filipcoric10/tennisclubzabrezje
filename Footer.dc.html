@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+  <script src="./clubData.js"></script>
+</helmet>
+<footer style="background:#123a24;color:#e7ecdf;margin-top:0;">
+  <div style="max-width:1200px;margin:0 auto;padding:56px 24px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;" class="tkz-foot-grid">
+    <div>
+      <div style="display:flex;flex-direction:column;line-height:1.1;margin-bottom:16px;">
+        <span style="font-family:Oswald;font-weight:700;letter-spacing:.06em;font-size:22px;text-transform:uppercase;">Zabrežje</span>
+        <span style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#8ba084;margin-top:4px;">Tennis Club</span>
+      </div>
+      <p style="color:#a9bda3;font-size:14.5px;line-height:1.6;max-width:300px;margin:0 0 18px;">{{ tagline }}</p>
+      <a href="{{ igUrl }}" style="display:inline-flex;align-items:center;gap:8px;color:#cddb46;font-size:14px;"><i class="ph-duotone ph-instagram-logo" style="font-size:20px;"></i>@{{ ig }}</a>
+    </div>
+    <div>
+      <div style="font-family:Oswald;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#cddb46;margin-bottom:14px;">{{ t.nav_home }}</div>
+      <div style="display:flex;flex-direction:column;gap:9px;">
+        <a href="Leagues.dc.html" style="color:#e7ecdf;font-size:14.5px;">{{ t.nav_leagues }}</a>
+        <a href="Reservations.dc.html" style="color:#e7ecdf;font-size:14.5px;">{{ t.nav_reserve }}</a>
+        <a href="About.dc.html" style="color:#e7ecdf;font-size:14.5px;">{{ t.nav_about }}</a>
+        <a href="Contact.dc.html" style="color:#e7ecdf;font-size:14.5px;">{{ t.nav_contact }}</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:Oswald;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#cddb46;margin-bottom:14px;">{{ t.nav_contact }}</div>
+      <div style="display:flex;flex-direction:column;gap:11px;color:#c9d5c1;font-size:14.5px;">
+        <span style="display:flex;gap:9px;align-items:flex-start;"><i class="ph-duotone ph-map-pin" style="color:#cddb46;font-size:18px;"></i>{{ address }}</span>
+        <a href="{{ telHref }}" style="display:flex;gap:9px;align-items:center;color:#c9d5c1;"><i class="ph-duotone ph-phone" style="color:#cddb46;font-size:18px;"></i>{{ phone }}</a>
+        <a href="{{ mailHref }}" style="display:flex;gap:9px;align-items:center;color:#c9d5c1;"><i class="ph-duotone ph-envelope-simple" style="color:#cddb46;font-size:18px;"></i>{{ email }}</a>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,.12);">
+    <div style="max-width:1200px;margin:0 auto;padding:18px 24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#8ba084;font-size:12.5px;">
+      <span>© 2026 Teniski klub Zabrežje · Obrenovac</span>
+      <span>{{ t.season }}: {{ seasonVal }}</span>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:280}}">
+class Component extends DCLogic {
+  state = { lang: "en" };
+  componentDidMount() {
+    this._boot();
+    this._onLang = () => this.setState({ lang: window.ClubStore.getLang() });
+    document.addEventListener("tkz-lang", this._onLang);
+  }
+  componentWillUnmount() { document.removeEventListener("tkz-lang", this._onLang); }
+  _boot(t) { t = t || 0; if (!window.ClubStore) { if (t < 40) setTimeout(() => this._boot(t + 1), 50); return; } this.setState({ lang: window.ClubStore.getLang() }); }
+  renderVals() {
+    var D = window.ClubData, lang = this.state.lang;
+    var T = (D && D.I18N[lang]) || {};
+    var C = D ? D.CONTACT : {};
+    return {
+      t: T,
+      tagline: lang === "sr" ? "Dva šljaka terena na obali Save u Obrenovcu. Članski klub, četiri lige, jedan dom."
+        : "Two clay courts on the bank of the Sava in Obrenovac. A members' club, four leagues, one home.",
+      ig: C.instagram || "", igUrl: C.instagram_url || "#",
+      address: lang === "sr" ? C.address_sr : C.address_en,
+      phone: C.phone, telHref: "tel:" + (C.phone || "").replace(/\s/g, ""),
+      email: C.email, mailHref: "mailto:" + (C.email || ""),
+      seasonVal: T.season_val || ""
+    };
+  }
+}
+</script>
+</body>
+</html>

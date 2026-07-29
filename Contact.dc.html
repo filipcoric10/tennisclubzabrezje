@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+  <script src="./clubData.js"></script>
+  <script src="./count-up.js"></script>
+  <script src="./tkz-anim.js"></script>
+  <style>
+    :root{ --ink:#20291f; --green:#1f6b3a; --green-dk:#123a24; --ball:#cddb46; --clay:#c0562a; --brown:#6e4a30; --cream:#f6f2e9; --muted:#6f675a; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; background:var(--cream); color:var(--ink); font-family:"Source Sans 3",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+    a{ color:var(--green); text-decoration:none; } a:hover{ color:var(--clay); }
+    ::selection{ background:var(--ball); color:var(--ink); }
+    :focus-visible{ outline:2px solid var(--clay); outline-offset:2px; }
+    @media (max-width:880px){ .tkz-foot-grid{ grid-template-columns:1fr !important; } }
+    @media (max-width:760px){ .tkz-contact{ grid-template-columns:1fr !important; } }
+  </style>
+</helmet>
+<div>
+  <dc-import name="Nav" active="contact" hint-size="100%,72px"></dc-import>
+
+  <section style="max-width:1200px;margin:0 auto;padding:44px 24px 20px;">
+    <div style="font-family:Oswald;letter-spacing:.2em;text-transform:uppercase;font-size:13px;color:var(--clay);margin-bottom:12px;">{{ t.nav_contact }}</div>
+    <h1 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:clamp(32px,4.6vw,60px);line-height:1;margin:0 0 30px;">{{ t.contact_title }}</h1>
+  </section>
+
+  <section style="max-width:1200px;margin:0 auto;padding:0 24px 90px;">
+    <div class="tkz-contact" style="display:grid;grid-template-columns:1fr 1.1fr;gap:32px;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <sc-for list="{{ items }}" as="c" hint-placeholder-count="4">
+          <a href="{{ c.href }}" style="display:flex;align-items:center;gap:16px;background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:18px 20px;color:var(--ink);">
+            <span style="width:48px;height:48px;flex:0 0 auto;border-radius:12px;background:rgba(31,107,58,.1);display:grid;place-items:center;color:var(--green);font-size:24px;"><i class="{{ c.icon }}"></i></span>
+            <span><span style="display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);">{{ c.label }}</span><span style="font-size:17px;font-weight:600;">{{ c.value }}</span></span>
+          </a>
+        </sc-for>
+        <div style="background:var(--green-dk);color:#e7ecdf;border-radius:14px;padding:20px;">
+          <div style="font-family:Oswald;letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:var(--ball);margin-bottom:12px;">{{ hoursTitle }}</div>
+          <div style="display:flex;justify-content:space-between;font-size:15px;"><span>{{ everyday }}</span><span style="font-family:Oswald;font-weight:600;">08:00 – 00:00</span></div>
+          <div style="font-size:13px;color:#a9bda3;margin-top:8px;">{{ hoursNote }}</div>
+        </div>
+      </div>
+
+      <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(18,58,36,.12);min-height:420px;background:#e4e6df;position:relative;">
+        <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=20.15%2C44.63%2C20.24%2C44.68&amp;layer=mapnik&amp;marker=44.655%2C20.195" style="width:100%;height:100%;min-height:420px;border:0;filter:saturate(.85);"></iframe>
+        <a href="https://www.openstreetmap.org/?mlat=44.655&mlon=20.195#map=14/44.655/20.195" target="_blank" style="position:absolute;bottom:14px;left:14px;background:#fff;border-radius:999px;padding:9px 16px;font-family:Oswald;letter-spacing:.04em;text-transform:uppercase;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.2);"><i class="ph-duotone ph-navigation-arrow"></i> {{ directions }}</a>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="Footer" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang: "en" };
+  componentDidMount() { this._boot(); this._onLang = () => this.setState({ lang: window.ClubStore.getLang() }); document.addEventListener("tkz-lang", this._onLang); }
+  componentWillUnmount() { document.removeEventListener("tkz-lang", this._onLang); }
+  _boot(t) { t = t || 0; if (!window.ClubStore) { if (t < 40) setTimeout(() => this._boot(t + 1), 50); return; } this.setState({ lang: window.ClubStore.getLang() }); }
+  renderVals() {
+    var D = window.ClubData, lang = this.state.lang, T = (D && D.I18N[lang]) || {};
+    var C = D ? D.CONTACT : {};
+    var items = [
+      { icon: "ph-duotone ph-map-pin", label: T.address, value: lang === "sr" ? C.address_sr : C.address_en, href: "https://www.openstreetmap.org/?mlat=44.655&mlon=20.195#map=14/44.655/20.195" },
+      { icon: "ph-duotone ph-phone", label: T.phone, value: C.phone, href: "tel:" + (C.phone || "").replace(/\s/g, "") },
+      { icon: "ph-duotone ph-envelope-simple", label: T.email, value: C.email, href: "mailto:" + C.email },
+      { icon: "ph-duotone ph-instagram-logo", label: T.instagram, value: "@" + C.instagram, href: C.instagram_url }
+    ];
+    return { t: T, items: items,
+      hoursTitle: lang === "sr" ? "Radno vreme" : "Opening hours",
+      everyday: lang === "sr" ? "Svakog dana" : "Every day",
+      hoursNote: lang === "sr" ? "Rezervacije se prave online, na stranici Rezervacije." : "Court bookings are made online on the Reservations page.",
+      directions: lang === "sr" ? "Uputstvo" : "Directions" };
+  }
+}
+</script>
+</body>
+</html>

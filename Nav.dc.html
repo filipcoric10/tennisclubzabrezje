@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+  <script src="./clubData.js"></script>
+  <script src="./image-slot.js"></script>
+  <style>
+    :root{ --ink:#20291f; --green:#1f6b3a; --green-dk:#123a24; --ball:#cddb46; --clay:#c0562a; --brown:#6e4a30; --cream:#f6f2e9; --muted:#6f675a; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; background:var(--cream); color:var(--ink); font-family:"Source Sans 3",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+    a{ color:var(--green); text-decoration:none; }
+    a:hover{ color:var(--clay); }
+    ::selection{ background:var(--ball); color:var(--ink); }
+    @keyframes tkzBounce{ 0%{ transform:translateY(-140px) scale(1,1);} 45%{ transform:translateY(0) scale(1.08,.9);} 55%{ transform:translateY(0) scale(1.08,.9);} 100%{ transform:translateY(-140px) scale(1,1);} }
+    @keyframes tkzSpin{ to{ transform:rotate(360deg);} }
+    @keyframes tkzFadeUp{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:translateY(0);} }
+    @keyframes tkzScrim{ from{ opacity:0;} to{ opacity:1;} }
+    :focus-visible{ outline:2px solid var(--clay); outline-offset:2px; }
+    @media (max-width:880px){ .tkz-desktop-nav{ display:none !important; } .tkz-burger{ display:block !important; } }
+  </style>
+</helmet>
+<div>
+  <header style="position:fixed;top:0;left:0;right:0;z-index:40;background:rgba(246,242,233,.94);backdrop-filter:blur(8px);">
+    <div style="max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:20px;">
+      <a href="index.html" style="display:flex;align-items:center;gap:11px;color:var(--ink);flex:0 0 auto;">
+        <span style="display:flex;flex-direction:column;line-height:1;">
+          <span style="font-family:Oswald;font-weight:700;letter-spacing:.06em;font-size:19px;text-transform:uppercase;">Zabrežje</span>
+          <span style="font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-top:3px;">Tennis Club</span>
+        </span>
+      </a>
+
+      <nav style="display:flex;gap:4px;margin-left:12px;flex:1 1 auto;" class="tkz-desktop-nav">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="5">
+          <a href="{{ item.href }}" style="{{ item.style }}">{{ item.label }}</a>
+        </sc-for>
+      </nav>
+
+      <div style="display:flex;align-items:center;gap:12px;flex:0 0 auto;" class="tkz-desktop-nav">
+        <div style="display:flex;border:1.5px solid var(--green-dk);border-radius:999px;overflow:hidden;font-family:Oswald;font-size:12px;letter-spacing:.05em;">
+          <button onClick="{{ setEn }}" style="{{ enStyle }}">EN</button>
+          <button onClick="{{ setSr }}" style="{{ srStyle }}">SR</button>
+        </div>
+        <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <a href="Leagues.dc.html" style="display:flex;align-items:center;gap:7px;color:var(--ink);">
+              <span style="width:30px;height:30px;border-radius:50%;background:{{ userLeagueColor }};color:#fff;display:grid;place-items:center;font-family:Oswald;font-weight:600;font-size:13px;">{{ userInitials }}</span>
+              <span style="font-size:13px;font-weight:600;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ userName }}</span>
+            </a>
+            <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ openAdmin }}" style="font-family:Oswald;font-size:12px;letter-spacing:.05em;text-transform:uppercase;background:var(--clay);color:#fff;border:none;border-radius:999px;padding:7px 13px;cursor:pointer;">{{ t.admin }}</button>
+            </sc-if>
+            <button onClick="{{ logout }}" title="{{ t.logout }}" style="background:none;border:1.5px solid var(--green-dk);border-radius:999px;padding:7px 13px;cursor:pointer;font-family:Oswald;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);">{{ t.logout }}</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ loggedOut }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ openLogin }}" style="font-family:Oswald;font-size:13px;letter-spacing:.05em;text-transform:uppercase;background:var(--green);color:#fff;border:none;border-radius:999px;padding:9px 18px;cursor:pointer;">{{ t.login }}</button>
+        </sc-if>
+      </div>
+
+      <button onClick="{{ toggleMobile }}" class="tkz-burger" style="display:none;background:none;border:1.5px solid var(--green-dk);border-radius:8px;padding:8px 10px;cursor:pointer;color:var(--ink);font-size:18px;line-height:1;">
+        <i class="ph-duotone ph-list"></i>
+      </button>
+    </div>
+
+    <sc-if value="{{ mobileOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:1px solid rgba(18,58,36,.15);padding:8px 24px 18px;display:flex;flex-direction:column;gap:2px;">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="5">
+          <a href="{{ item.href }}" style="{{ item.mstyle }}">{{ item.label }}</a>
+        </sc-for>
+        <div style="display:flex;gap:10px;margin-top:12px;align-items:center;">
+          <div style="display:flex;border:1.5px solid var(--green-dk);border-radius:999px;overflow:hidden;font-family:Oswald;font-size:13px;">
+            <button onClick="{{ setEn }}" style="{{ enStyle }}">EN</button>
+            <button onClick="{{ setSr }}" style="{{ srStyle }}">SR</button>
+          </div>
+          <sc-if value="{{ loggedOut }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ openLogin }}" style="flex:1;font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;background:var(--green);color:#fff;border:none;border-radius:999px;padding:11px 18px;cursor:pointer;">{{ t.login }}</button>
+          </sc-if>
+          <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ logout }}" style="flex:1;font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;background:none;border:1.5px solid var(--green-dk);border-radius:999px;padding:11px 18px;cursor:pointer;color:var(--ink);">{{ t.logout }}</button>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+  </header>
+  <div style="height:71px;" class="tkz-navspacer"></div>
+
+  <!-- INTRO OVERLAY -->
+  <sc-if value="{{ showIntro }}" hint-placeholder-val="{{ false }}">
+    <div id="tkz-intro" style="position:fixed;inset:0;z-index:90;background:linear-gradient(160deg,#123a24,#0c2a1a);display:grid;place-items:center;animation:tkzScrim .4s ease;overflow:hidden;">
+      <div style="position:absolute;inset:0;opacity:.09;background-image:repeating-linear-gradient(45deg,#cddb46 0 2px,transparent 2px 22px);"></div>
+      <div style="position:relative;text-align:center;padding:32px;max-width:560px;">
+        <p style="font-family:Oswald;letter-spacing:.34em;text-transform:uppercase;color:var(--ball);font-size:13px;margin:0 0 12px;animation:tkzFadeUp .6s .1s both;">{{ introKicker }}</p>
+        <h1 style="font-family:Oswald;font-weight:700;color:#fff;font-size:clamp(30px,5vw,50px);line-height:1.02;margin:0 0 16px;text-transform:uppercase;animation:tkzFadeUp .6s .2s both;">{{ introTitle }}</h1>
+        <p style="color:#d5e0cf;font-size:16px;line-height:1.5;margin:0 auto 32px;max-width:420px;animation:tkzFadeUp .6s .3s both;">{{ introSub }}</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:tkzFadeUp .6s .4s both;">
+          <button onClick="{{ introLogin }}" style="font-family:Oswald;font-size:15px;letter-spacing:.06em;text-transform:uppercase;background:var(--ball);color:var(--green-dk);border:none;border-radius:999px;padding:14px 30px;cursor:pointer;font-weight:600;">{{ t.login }}</button>
+          <button onClick="{{ introSkip }}" style="font-family:Oswald;font-size:15px;letter-spacing:.06em;text-transform:uppercase;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5);border-radius:999px;padding:14px 30px;cursor:pointer;">{{ t.skip }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- LOGIN MODAL -->
+  <sc-if value="{{ showLogin }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeLogin }}" style="position:fixed;inset:0;z-index:95;background:rgba(18,42,26,.55);backdrop-filter:blur(3px);display:grid;place-items:center;padding:20px;animation:tkzScrim .25s ease;">
+      <div onClick="{{ stop }}" style="position:relative;background:var(--cream);border-radius:16px;max-width:440px;width:100%;padding:34px 32px;box-shadow:0 30px 70px rgba(0,0,0,.35);border-top:5px solid var(--clay);">
+        <button onClick="{{ backToIntro }}" title="{{ closeTitle }}" style="position:absolute;top:14px;right:14px;width:34px;height:34px;display:grid;place-items:center;background:rgba(18,58,36,.07);border:none;border-radius:50%;cursor:pointer;color:var(--green-dk);font-size:20px;line-height:1;">&times;</button>
+        <sc-if value="{{ showLoginForm }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <h2 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:26px;margin:0 0 6px;">{{ t.login_title }}</h2>
+            <p style="color:var(--muted);font-size:14.5px;line-height:1.5;margin:0 0 22px;">{{ t.login_sub }}</p>
+            <sc-if value="{{ loginError }}" hint-placeholder-val="{{ false }}">
+              <div style="background:rgba(192,86,42,.12);border:1px solid rgba(192,86,42,.35);border-radius:10px;padding:11px 14px;margin-bottom:16px;font-size:13.5px;color:var(--clay);">{{ loginError }}</div>
+            </sc-if>
+            <label style="display:block;font-family:Oswald;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;">{{ t.login_email }}</label>
+            <input id="tkz-login-email" type="email" placeholder="filipnote4@gmail.com" style="width:100%;padding:12px 14px;border:1.5px solid rgba(18,58,36,.3);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;margin-bottom:14px;" />
+            <label style="display:block;font-family:Oswald;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;">{{ t.login_name }}</label>
+            <input id="tkz-login-name" type="text" placeholder="{{ namePlaceholder }}" style="width:100%;padding:12px 14px;border:1.5px solid rgba(18,58,36,.3);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;margin-bottom:20px;" />
+            <button onClick="{{ submitLogin }}" style="width:100%;font-family:Oswald;font-size:15px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;background:var(--green);color:#fff;border:none;border-radius:10px;padding:14px;cursor:pointer;">{{ t.login_submit }}</button>
+            <p style="font-size:12px;color:var(--muted);margin:16px 0 0;line-height:1.5;">Demo: <b>admin@tkz.rs</b> (admin) · any league player's email is pre-approved · a new email creates a pending request.</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ loginPending }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:6px 0;">
+            <div style="width:66px;height:66px;margin:0 auto 20px;border-radius:50%;background:rgba(192,86,42,.14);display:grid;place-items:center;color:var(--clay);font-size:34px;"><i class="ph-duotone ph-paper-plane-tilt"></i></div>
+            <h2 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:24px;margin:0 0 12px;">{{ pendingTitle }}</h2>
+            <p style="color:#463f34;font-size:15px;line-height:1.55;margin:0 0 24px;">{{ t.pending_msg }}</p>
+            <button onClick="{{ closeLogin }}" style="width:100%;font-family:Oswald;font-size:15px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;background:var(--green);color:#fff;border:none;border-radius:10px;padding:14px;cursor:pointer;">{{ pendingCta }}</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ADMIN MODAL -->
+  <sc-if value="{{ showAdmin }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeAdmin }}" style="position:fixed;inset:0;z-index:95;background:rgba(18,42,26,.55);backdrop-filter:blur(3px);display:grid;place-items:center;padding:20px;animation:tkzScrim .25s ease;">
+      <div onClick="{{ stop }}" style="background:var(--cream);border-radius:16px;max-width:520px;width:100%;padding:34px 32px;box-shadow:0 30px 70px rgba(0,0,0,.35);border-top:5px solid var(--green);max-height:82vh;overflow:auto;">
+        <h2 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:26px;margin:0 0 18px;">{{ t.admin_title }}</h2>
+        <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <sc-for list="{{ pendingUsers }}" as="u" hint-placeholder-count="2">
+              <div style="background:#fff;border:1px solid rgba(18,58,36,.15);border-radius:12px;padding:14px 16px;">
+                <div style="font-weight:700;font-size:15px;">{{ u.name }}</div>
+                <div style="color:var(--muted);font-size:13px;margin-bottom:10px;">{{ u.email }}</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <sc-for list="{{ u.buttons }}" as="b" hint-placeholder-count="4">
+                    <button onClick="{{ b.onClick }}" style="font-family:Oswald;font-size:12px;letter-spacing:.04em;text-transform:uppercase;background:{{ b.color }};color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;">{{ b.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noPending }}" hint-placeholder-val="{{ true }}">
+          <p style="color:var(--muted);font-size:15px;">{{ t.no_pending }}</p>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:90},&quot;active&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;leagues&quot;,&quot;reserve&quot;,&quot;about&quot;,&quot;contact&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { lang: "en", ready: false, session: null, showIntro: false, showLogin: false, showAdmin: false, mobileOpen: false, loginPending: false };
+
+  componentDidMount() {
+    this._boot();
+    this._onLang = () => this.setState({ lang: window.ClubStore.getLang() });
+    this._onAuth = () => this.setState({ session: window.ClubStore.session() });
+    document.addEventListener("tkz-lang", this._onLang);
+    document.addEventListener("tkz-auth", this._onAuth);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("tkz-lang", this._onLang);
+    document.removeEventListener("tkz-auth", this._onAuth);
+  }
+  _boot(tries) {
+    tries = tries || 0;
+    if (!window.ClubStore) { if (tries < 40) setTimeout(() => this._boot(tries + 1), 50); return; }
+    var s = window.ClubStore;
+    var entered = false;
+    try { entered = sessionStorage.getItem("tkz_entered") === "1"; } catch (e) {}
+    this.setState({ ready: true, lang: s.getLang(), session: s.session(),
+      showIntro: !s.session() && !entered });
+  }
+  _markEntered() { try { sessionStorage.setItem("tkz_entered", "1"); } catch (e) {} }
+
+  renderVals() {
+    var self = this, S = window.ClubStore, D = window.ClubData;
+    var lang = this.state.lang;
+    var T = (D && D.I18N[lang]) || {};
+    var session = this.state.session;
+    var active = this.props.active || "home";
+
+    var base = "font-family:Oswald;font-size:14.5px;letter-spacing:.03em;text-transform:uppercase;padding:8px 12px;border-radius:8px;color:#20291f;transition:background .15s;";
+    var on = base + "background:rgba(31,107,58,.12);color:#123a24;";
+    var mbase = "font-family:Oswald;font-size:16px;letter-spacing:.03em;text-transform:uppercase;padding:11px 6px;color:#20291f;border-bottom:1px solid rgba(18,58,36,.08);";
+    var items = [
+      ["home", "index.html", "nav_home"], ["leagues", "Leagues.dc.html", "nav_leagues"],
+      ["reserve", "Reservations.dc.html", "nav_reserve"], ["about", "About.dc.html", "nav_about"],
+      ["contact", "Contact.dc.html", "nav_contact"]
+    ];
+    var navItems = items.map(function (it) {
+      return { href: it[1], label: T[it[2]] || it[0], key: it[0],
+        style: active === it[0] ? on : base,
+        mstyle: active === it[0] ? mbase + "color:#1f6b3a;font-weight:600;" : mbase };
+    });
+
+    var segOn = "background:var(--green-dk);color:#fff;border:none;padding:6px 12px;cursor:pointer;font-family:Oswald;letter-spacing:.05em;";
+    var segOff = "background:transparent;color:#20291f;border:none;padding:6px 12px;cursor:pointer;font-family:Oswald;letter-spacing:.05em;";
+
+    var lm = session && session.league && D ? D.LEAGUE_META[session.league] : null;
+    var initials = session ? session.name.split(" ").map(function (w) { return w[0]; }).slice(0, 2).join("") : "";
+
+    // admin pending list with per-league approve buttons
+    var pending = (S && this.state.showAdmin) ? S.pending() : [];
+    var pendingUsers = pending.map(function (u) {
+      var buttons = (D ? D.LEAGUES : []).map(function (lg) {
+        return { label: (T.approve || "Into") + " " + lg, color: D.LEAGUE_META[lg].color,
+          onClick: function () { S.approve(u.email, lg); self.forceUpdate(); document.dispatchEvent(new CustomEvent("tkz-auth")); } };
+      });
+      return { name: u.name, email: u.email, buttons: buttons };
+    });
+
+    return {
+      t: T, ready: this.state.ready,
+      navItems: navItems,
+      loggedIn: !!session, loggedOut: !session,
+      isAdmin: !!(session && session.isAdmin),
+      userName: session ? session.name : "",
+      userInitials: initials,
+      userLeagueColor: lm ? lm.color : "#6e4a30",
+      enStyle: lang === "en" ? segOn : segOff,
+      srStyle: lang === "sr" ? segOn : segOff,
+      mobileOpen: this.state.mobileOpen,
+      showIntro: this.state.showIntro,
+      showLogin: this.state.showLogin,
+      showAdmin: this.state.showAdmin,
+      loginPending: this.state.loginPending,
+      showLoginForm: !this.state.loginPending,
+      loginError: this.state.loginError || "",
+      pendingTitle: lang === "sr" ? "Zahtev poslat" : "Request sent",
+      pendingCta: lang === "sr" ? "Razgledaj sajt" : "Browse the site",
+      namePlaceholder: lang === "sr" ? "Ime i prezime" : "Name and Surname",
+      introKicker: lang === "sr" ? "Teniski klub Zabrežje" : "Tennis Club Zabrežje",
+      introTitle: lang === "sr" ? "Dobrodošli na teren." : "Welcome to the courts.",
+      introSub: lang === "sr" ? "Prijavi se ako igraš ligu, ili uđi kao gost da razgledaš tabelu, profile i termine."
+        : "Sign in if you play the league, or enter as a guest to browse the standings, profiles and court times.",
+      hasPending: pendingUsers.length > 0, noPending: pendingUsers.length === 0, pendingUsers: pendingUsers,
+
+      setEn: function () { S.setLang("en"); self.setState({ lang: "en" }); },
+      setSr: function () { S.setLang("sr"); self.setState({ lang: "sr" }); },
+      toggleMobile: function () { self.setState({ mobileOpen: !self.state.mobileOpen }); },
+      openLogin: function () { self.setState({ showLogin: true, mobileOpen: false, loginPending: false, loginError: "" }); },
+      closeLogin: function () { self.setState({ showLogin: false, loginPending: false, loginError: "" }); },
+      backToIntro: function () { self.setState({ showLogin: false, loginPending: false, loginError: "", showIntro: true }); },
+      closeTitle: T.back || "Back",
+      openAdmin: function () { self.setState({ showAdmin: true, mobileOpen: false }); },
+      closeAdmin: function () { self.setState({ showAdmin: false }); },
+      stop: function (e) { e.stopPropagation(); },
+      logout: function () { S.logout(); self.setState({ session: null }); document.dispatchEvent(new CustomEvent("tkz-auth")); },
+      introLogin: function () { self._markEntered(); self.setState({ showIntro: false, showLogin: true }); },
+      introSkip: function () { self._markEntered(); self.setState({ showIntro: false }); },
+      submitLogin: function () {
+        var email = (document.getElementById("tkz-login-email") || {}).value || "";
+        var name = (document.getElementById("tkz-login-name") || {}).value || "";
+        if (!email.trim() || email.indexOf("@") < 0) {
+          self.setState({ loginError: lang === "sr" ? "Unesi ispravnu mejl adresu." : "Enter a valid email address." });
+          return;
+        }
+        var res = S.login(email, name);
+        if (res.ok) { self.setState({ showLogin: false, session: res.user, loginPending: false, loginError: "" }); document.dispatchEvent(new CustomEvent("tkz-auth")); }
+        else { self.setState({ loginPending: true, loginError: "" }); }
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
