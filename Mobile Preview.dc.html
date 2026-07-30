@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+  <style>
+    *{ box-sizing:border-box; }
+    body{ margin:0; background:#e7e4dc; font-family:"Source Sans 3",system-ui,sans-serif; }
+  </style>
+</helmet>
+<div style="min-height:100vh;padding:34px 24px 60px;display:flex;flex-direction:column;align-items:center;gap:24px;">
+  <div style="text-align:center;">
+    <div style="font-family:Oswald;letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:#c0562a;margin-bottom:8px;">Mobile preview · 375px</div>
+    <h1 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:26px;margin:0;color:#20291f;">Zabrežje — mobilna verzija</h1>
+  </div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:520px;">
+    <sc-for list="{{ pages }}" as="p" hint-placeholder-count="6">
+      <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.label }}</button>
+    </sc-for>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#6f675a;">
+    <span>Širina:</span>
+    <sc-for list="{{ widths }}" as="w" hint-placeholder-count="3">
+      <button onClick="{{ w.onClick }}" style="{{ w.style }}">{{ w.label }}</button>
+    </sc-for>
+  </div>
+
+  <!-- phone frame -->
+  <div style="position:relative;padding:12px;background:#1a1a1c;border-radius:46px;box-shadow:0 30px 70px rgba(0,0,0,.35);flex:0 0 auto;">
+    <div style="width:{{ frameW }}px;height:788px;background:#f6f2e9;border-radius:36px;overflow:hidden;position:relative;display:flex;flex-direction:column;">
+      <!-- reserved space for the real phone status bar -->
+      <div style="flex:0 0 auto;height:46px;background:#f6f2e9;"></div>
+      <iframe id="tkz-mobile-frame" src="{{ src }}" title="mobile" style="flex:1 1 auto;width:100%;border:0;display:block;"></iframe>
+    </div>
+  </div>
+
+  <a href="index.html" style="font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:13px;color:#1f6b3a;text-decoration:none;">← Nazad na desktop sajt</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:1000}}">
+class Component extends DCLogic {
+  state = { src: "index.html", frameW: 375 };
+  renderVals() {
+    var self = this;
+    var pageDefs = [
+      ["index.html", "Home"], ["Leagues.dc.html", "Leagues"], ["Player.dc.html?id=A-1", "Player"],
+      ["Reservations.dc.html", "Reservations"], ["About.dc.html", "About"], ["Contact.dc.html", "Contact"]
+    ];
+    var pages = pageDefs.map(function (d) {
+      var on = self.state.src === d[0];
+      return { label: d[1],
+        style: "font-family:Oswald;letter-spacing:.04em;text-transform:uppercase;font-size:13px;padding:9px 16px;border-radius:999px;cursor:pointer;border:1.5px solid " +
+          (on ? "#1f6b3a" : "rgba(18,58,36,.25)") + ";background:" + (on ? "#1f6b3a" : "#fff") + ";color:" + (on ? "#fff" : "#20291f") + ";",
+        onClick: function () { self.setState({ src: d[0] }); } };
+    });
+    var widthDefs = [[375, "375"], [390, "390"], [430, "430"]];
+    var widths = widthDefs.map(function (d) {
+      var on = self.state.frameW === d[0];
+      return { label: d[1] + "px",
+        style: "font-family:Oswald;font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer;border:1.5px solid " +
+          (on ? "#1f6b3a" : "rgba(18,58,36,.2)") + ";background:" + (on ? "#1f6b3a" : "#fff") + ";color:" + (on ? "#fff" : "#20291f") + ";",
+        onClick: function () { self.setState({ frameW: d[0] }); } };
+    });
+    return { pages: pages, widths: widths, src: this.state.src, frameW: this.state.frameW };
+  }
+}
+</script>
+</body>
+</html>

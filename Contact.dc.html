@@ -35,7 +35,7 @@
   </section>
 
   <section style="max-width:1200px;margin:0 auto;padding:0 24px 90px;">
-    <div class="tkz-contact" style="display:grid;grid-template-columns:1fr 1.1fr;gap:32px;align-items:start;">
+    <div class="tkz-contact" style="display:grid;grid-template-columns:1fr 1.1fr;gap:32px;align-items:stretch;">
       <div style="display:flex;flex-direction:column;gap:14px;">
         <sc-for list="{{ items }}" as="c" hint-placeholder-count="4">
           <a href="{{ c.href }}" style="display:flex;align-items:center;gap:16px;background:#fff;border:1px solid rgba(18,58,36,.1);border-radius:14px;padding:18px 20px;color:var(--ink);">
@@ -50,8 +50,8 @@
         </div>
       </div>
 
-      <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(18,58,36,.12);min-height:420px;background:#e4e6df;position:relative;">
-        <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=20.15%2C44.63%2C20.24%2C44.68&amp;layer=mapnik&amp;marker=44.655%2C20.195" style="width:100%;height:100%;min-height:420px;border:0;filter:saturate(.85);"></iframe>
+      <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(18,58,36,.12);min-height:420px;background:#e4e6df;position:relative;height:100%;">
+        <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=20.15%2C44.63%2C20.24%2C44.68&amp;layer=mapnik&amp;marker=44.655%2C20.195" style="width:100%;height:100%;border:0;filter:saturate(.85);"></iframe>
         <a href="https://www.openstreetmap.org/?mlat=44.655&mlon=20.195#map=14/44.655/20.195" target="_blank" style="position:absolute;bottom:14px;left:14px;background:#fff;border-radius:999px;padding:9px 16px;font-family:Oswald;letter-spacing:.04em;text-transform:uppercase;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.2);"><i class="ph-duotone ph-navigation-arrow"></i> {{ directions }}</a>
       </div>
     </div>
