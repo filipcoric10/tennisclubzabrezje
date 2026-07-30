@@ -133,7 +133,7 @@
       edit_result: "Edit result", save: "Save", cancel: "Cancel",
       reserve_title: "Reserve a court", reserve_sub: "90-minute slots, 08:00 to midnight, on either clay court.",
       court: "Court", available: "Available", booked: "Booked", book: "Book",
-      contact_title: "Come play", phone: "Phone", email: "Email", address: "Address", instagram: "Instagram",
+      contact_title: "Come & Play", phone: "Phone", email: "Email", address: "Address", instagram: "Instagram",
       profile: "Profile", overview: "Overview", results_tab: "Results", stats_tab: "Statistics",
       current_form: "Current form", win_rate: "Win rate", ranking: "Ranking",
       about_player: "About", plays: "Playing since", hand: "Plays", height: "Height",

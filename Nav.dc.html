@@ -28,7 +28,7 @@
     :focus-visible{ outline:2px solid var(--clay); outline-offset:2px; }
     @media (max-width:880px){ .tkz-desktop-nav{ display:none !important; } .tkz-burger{ display:block !important; } .tkz-mobile-actions{ display:flex !important; } }
     @media (max-width:600px){
-      html, body{ overflow-x:hidden; max-width:100%; }
+      html, body{ overflow-x:clip; max-width:100%; }
       [style*="margin: 0px auto"][style*="24px"]{ padding-left:16px !important; padding-right:16px !important; }
       .tkz-amen{ grid-template-columns:1fr !important; }
       [style*="90px"], [style*="96px"]{ padding-bottom:44px !important; }
@@ -126,7 +126,7 @@
   </sc-if>
 
   <sc-if value="{{ introShield }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;inset:0;z-index:89;background:transparent;"></div>
+    <div style="position:fixed;inset:0;z-index:300;background:transparent;"></div>
   </sc-if>
 
   <!-- LOGIN MODAL -->
@@ -292,10 +292,11 @@ class Component extends DCLogic {
       stop: function (e) { e.stopPropagation(); },
       logout: function () { S.logout(); self.setState({ session: null }); document.dispatchEvent(new CustomEvent("tkz-auth")); },
       introLogin: function () { self._markEntered(); self.setState({ showIntro: false, showLogin: true }); },
-      introSkip: function () {
+      introSkip: function (e) {
+        try { e && e.preventDefault && e.preventDefault(); } catch (_) {}
         self._markEntered();
         self.setState({ showIntro: false, introShield: true });
-        setTimeout(function () { self.setState({ introShield: false }); }, 500);
+        setTimeout(function () { self.setState({ introShield: false }); }, 700);
       },
       submitLogin: function () {
         var email = (document.getElementById("tkz-login-email") || {}).value || "";
