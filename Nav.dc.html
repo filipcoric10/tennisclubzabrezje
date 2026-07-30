@@ -125,6 +125,10 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{ introShield }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:89;background:transparent;"></div>
+  </sc-if>
+
   <!-- LOGIN MODAL -->
   <sc-if value="{{ showLogin }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeLogin }}" style="position:fixed;inset:0;z-index:95;background:rgba(18,42,26,.55);backdrop-filter:blur(3px);display:grid;place-items:center;padding:20px;animation:tkzScrim .25s ease;">
@@ -187,7 +191,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:90},&quot;active&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;leagues&quot;,&quot;reserve&quot;,&quot;about&quot;,&quot;contact&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
-  state = { lang: "en", ready: false, session: null, showIntro: false, showLogin: false, showAdmin: false, mobileOpen: false, loginPending: false };
+  state = { lang: "en", ready: false, session: null, showIntro: false, showLogin: false, showAdmin: false, mobileOpen: false, loginPending: false, introShield: false };
 
   componentDidMount() {
     this._boot();
@@ -260,6 +264,7 @@ class Component extends DCLogic {
       srStyle: lang === "sr" ? segOn : segOff,
       mobileOpen: this.state.mobileOpen,
       showIntro: this.state.showIntro,
+      introShield: this.state.introShield,
       showLogin: this.state.showLogin,
       showAdmin: this.state.showAdmin,
       loginPending: this.state.loginPending,
@@ -287,7 +292,11 @@ class Component extends DCLogic {
       stop: function (e) { e.stopPropagation(); },
       logout: function () { S.logout(); self.setState({ session: null }); document.dispatchEvent(new CustomEvent("tkz-auth")); },
       introLogin: function () { self._markEntered(); self.setState({ showIntro: false, showLogin: true }); },
-      introSkip: function () { self._markEntered(); self.setState({ showIntro: false }); },
+      introSkip: function () {
+        self._markEntered();
+        self.setState({ showIntro: false, introShield: true });
+        setTimeout(function () { self.setState({ introShield: false }); }, 500);
+      },
       submitLogin: function () {
         var email = (document.getElementById("tkz-login-email") || {}).value || "";
         var name = (document.getElementById("tkz-login-name") || {}).value || "";

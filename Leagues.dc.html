@@ -26,6 +26,7 @@
     .tkz-row:hover{ background:rgba(31,107,58,.05) !important; }
     @media (max-width:880px){ .tkz-foot-grid{ grid-template-columns:1fr !important; } .tkz-hide-sm{ display:none !important; } }
     @media (max-width:760px){ .tkz-roster{ grid-template-columns:1fr 1fr !important; } .tkz-matchgrid{ grid-template-columns:1fr !important; } }
+    @media (max-width:600px){ .tkz-lgtabs{ display:grid !important; grid-template-columns:repeat(2,1fr); gap:10px; border-bottom:none !important; } .tkz-lgtabs button{ margin-bottom:0 !important; background:#fff !important; border-radius:12px; padding:12px 8px !important; box-shadow:0 1px 3px rgba(18,58,36,.07); } }
   </style>
 </helmet>
 <div>
@@ -43,7 +44,7 @@
 
   <!-- LEAGUE TABS -->
   <section style="max-width:1200px;margin:0 auto;padding:8px 24px 0;">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;border-bottom:2px solid rgba(18,58,36,.14);padding-bottom:0;">
+    <div class="tkz-lgtabs" style="display:flex;gap:8px;flex-wrap:wrap;border-bottom:2px solid rgba(18,58,36,.14);padding-bottom:0;">
       <sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="4">
         <button onClick="{{ tab.onClick }}" style="{{ tab.style }}">
           <span style="font-family:Oswald;font-weight:700;font-size:20px;">{{ tab.letter }}</span>
