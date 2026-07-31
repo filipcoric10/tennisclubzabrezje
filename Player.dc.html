@@ -24,7 +24,7 @@
     ::selection{ background:var(--ball); color:var(--ink); }
     :focus-visible{ outline:2px solid var(--clay); outline-offset:2px; }
     @media (max-width:880px){ .tkz-foot-grid{ grid-template-columns:1fr !important; } }
-    @media (max-width:720px){ .tkz-phead{ grid-template-columns:1fr !important; text-align:center; } .tkz-phead .tkz-portrait{ margin:0 auto; } .tkz-stat3{ grid-template-columns:1fr 1fr !important; } .tkz-info{ grid-template-columns:1fr 1fr !important; } }
+    @media (max-width:720px){ .tkz-phead{ grid-template-columns:1fr !important; text-align:center; } .tkz-phead .tkz-portrait{ margin:0 auto; } .tkz-pstats{ justify-content:center !important; } .tkz-stat3{ grid-template-columns:1fr 1fr !important; } .tkz-info{ grid-template-columns:1fr 1fr !important; } }
   </style>
 </helmet>
 <div>
@@ -43,8 +43,8 @@
       <div style="max-width:1200px;margin:0 auto;padding:26px 24px 34px;">
         <a href="Leagues.dc.html" style="display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.85);font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:13px;margin-bottom:22px;"><i class="ph-duotone ph-arrow-left"></i>{{ t.back }}</a>
         <div class="tkz-phead" style="display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center;">
-          <div class="tkz-portrait" style="width:150px;height:190px;border-radius:16px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.3);border:3px solid rgba(255,255,255,.3);">
-            <image-slot id="{{ portraitSlot }}" shape="rect" src="{{ portraitSrc }}" placeholder="Portrait photo"></image-slot>
+          <div class="tkz-portrait" style="width:150px;height:190px;border-radius:16px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.3);border:3px solid rgba(255,255,255,.3);background:#0c2a1a;">
+            <img src="{{ portraitSrc }}" alt="{{ name }}" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;" />
           </div>
           <div>
             <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);padding:6px 13px;border-radius:999px;margin-bottom:14px;">
@@ -52,7 +52,7 @@
               <span style="font-family:Oswald;letter-spacing:.05em;text-transform:uppercase;font-size:12px;">{{ leagueName }}</span>
             </div>
             <h1 style="font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:clamp(30px,5vw,56px);line-height:.98;margin:0 0 16px;">{{ name }}</h1>
-            <div style="display:flex;gap:30px;flex-wrap:wrap;">
+            <div class="tkz-pstats" style="display:flex;gap:30px;flex-wrap:wrap;">
               <div><div style="font-family:Oswald;font-weight:700;font-size:34px;line-height:1;"><count-up to="{{ rank }}" prefix="#">#{{ rank }}</count-up></div><div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-top:4px;">{{ t.ranking }}</div></div>
               <div><div style="font-family:Oswald;font-weight:700;font-size:34px;line-height:1;"><count-up to="{{ points }}">{{ points }}</count-up></div><div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-top:4px;">{{ t.points }}</div></div>
               <div><div style="font-family:Oswald;font-weight:700;font-size:34px;line-height:1;">{{ record }}</div><div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-top:4px;">{{ t.won }} – {{ t.lost }}</div></div>
